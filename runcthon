@@ -1,0 +1,186 @@
+#!/bin/bash
+SRV=fedora9server
+privatemnts=0
+homedir="/home/tmp"
+homedir="/server/tmp"
+
+runtests()
+{
+test=$1
+server=$2
+vers=$3
+proto=$4
+sec=$5
+#echo "proto=$proto"
+#echo "sec=$sec"
+	[ $server = "gfiler" ] && homedir="/vol/vol3/tmp"
+	[ $server = "sol10" ] && homedir="/export/cthon_automount/tmp"
+	[ $server = "sol9" ] && homedir="/export/home/tmp"
+
+	if [ $vers = "4" ]; then
+		if [ -n "$sec" ] ; then
+			mntargs="-F nfs4 -o proto=$proto,sec=$sec"
+		else
+			mntargs="-F nfs4 -o proto=$proto"
+		fi
+	else
+		if [ -n "$sec" ] ; then
+			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
+		else
+			mntargs="-o $proto,nfsvers=$vers"
+		fi
+	fi
+	if [ $privatemnts -eq 1 ]; then
+		mnt=/mnt/$SRV
+	else
+		mnt=/mnt
+	fi
+	mkdir -p $mnt/nfsv$vers$proto || exit 1
+	mntpoint="-m $mnt/nfsv$vers$proto"
+	exportdir="-p $homedir/nfsv$vers$proto"
+	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
+	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
+	[ $? -ne 0 ] && echo "\nThe '$test' test using '$mntargs' args to  $SRV: Failed!!"
+	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
+		sudo umount $mnt/nfsv$vers$proto ) &
+	#echo -n "waiting...."
+	#wait
+}
+umountall()
+{
+	for proto in udp tcp
+	do
+		for vers in 2 3 4
+		do
+			[ -d /mnt/nfsv$vers$proto/`hostname -s`.test ] && 
+				sudo umount /mnt/nfsv$vers$proto
+		done
+	done
+	exit 0
+}
+mkdirs()
+{
+	for proto in udp tcp
+	do
+		for vers in 2 3 4
+		do
+			[ "$proto" == "udp" -a "$vers" == "4" ] && continue
+			mkdir ./nfsv$vers$proto
+		done
+	done
+	exit 0
+}
+trap 'echo SIGINT; pkill runcthon server; exit 1 ' SIGINT
+trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
+Usage="$0 --mkdirs --unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4"
+
+noudp=0
+dokrb5=0
+onlykrb5=0
+nov4=0
+onlyv3=0
+onlyv4=0
+while [ -n "$1" ]
+do
+	case $1 in
+	"--mkdirs" )
+		cd $homedir && mkdirs
+		exit 0
+	;;
+	"--unmountall" )
+		umountall
+	;;
+	"--server" )
+		SRV="$2"
+		shift
+	;;
+	"-p" )
+		privatemnts=1
+	;;
+	"--serverdir" )
+		homedir="$2"
+		shift
+	;;
+	"-h" )
+		echo $Usage
+		exit 0
+	;;
+	"--noudp" )
+		noudp=1
+	;;
+	"--dokrb5" )
+		dokrb5=1
+	;;
+	"--onlykrb5" )
+		onlykrb5=1
+	;;
+	"--nov4" )
+		nov4=1
+	;;
+	"--onlyv3" )
+		onlyv3=1
+	;;
+	"--onlyv4" )
+		onlyv4=1
+	;;
+	* )
+		echo "'$1' - invalid option"
+		echo "$Usage"
+		exit 1
+	esac	
+	shift
+done
+date
+cd /home/steved/work/cthon04 || exit 1
+seclist="krb5 krb5i krb5p"
+echo "homedir=$homedir"
+for i in b g s l
+do
+	if [ "$onlykrb5" -eq 0 ]; then  
+		if [ "$noudp" -ne 1 ]; then  
+			if [ "$onlyv4" -eq 0 ]; then
+				runtests -$i $SRV 3 udp ""
+				if [ "$onlyv3" -eq 0 ]; then 
+					runtests -$i $SRV 2 udp ""
+				fi
+			fi
+		fi
+		if [ "$onlyv4" -eq 0 ]; then
+			runtests -$i $SRV 3 tcp ""
+			if [ "$onlyv3" -eq 0 ]; then
+				runtests -$i $SRV 2 tcp ""
+			fi
+		fi
+		if [ "$nov4" -eq 0 ]; then
+			runtests -$i $SRV 4 tcp ""
+		fi
+	fi
+	echo -n "Waiting for '$i' to finish..."
+	wait
+
+	if [ "$dokrb5" -eq 1 ]; then  
+		for j in krb5 krb5i krb5p
+		do
+			if ["$noudp" -ne 1 ]; then  
+				if [ "$onlyv4" -eq 0 ]; then
+					runtests -$i $SRV 3 udp $j
+					if [ "$onlyv3" -eq 0 ]; then
+						runtests -$i $SRV 2 udp $j
+					fi
+				fi
+			fi
+
+			if [ "$onlyv4" -eq 0 ]; then
+				runtests -$i $SRV 3 tcp $j
+				if [ "$onlyv3" -eq 0 ]; then
+					runtests -$i $SRV 2 tcp $j
+				fi
+			fi
+			if [ "$nov4" -eq 0 ]; then
+				runtests -$i $SRV 4 tcp $j
+			fi
+		done
+	fi
+	echo -n "Done: "
+	date
+done

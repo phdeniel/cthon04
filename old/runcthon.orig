@@ -1,0 +1,95 @@
+#!/bin/bash
+SRV=rhel5hat
+privatemnts=0
+
+runtests()
+{
+test=$1
+server=$2
+vers=$3
+proto=$4
+sec=$5
+homedir="/home"
+#echo "proto=$proto"
+#echo "sec=$sec"
+	[ $server = "gfiler" ] && homedir="/vol/vol3"
+	[ $server = "sol10" ] && homedir="/export/cthon_automount"
+	[ $server = "sol9" ] && homedir="/export/home"
+
+	if [ $vers = "4" ]; then
+		if [ -n "$sec" ] ; then
+			mntargs="-F nfs4 -o proto=$proto,sec=$sec"
+		else
+			mntargs="-F nfs4 -o proto=$proto"
+		fi
+	else
+		if [ -n "$sec" ] ; then
+			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
+		else
+			mntargs="-o $proto,nfsvers=$vers"
+		fi
+	fi
+	if [ $privatemnts -eq 1 ]; then
+		mnt=/mnt/$SRV
+	else
+		mnt=/mnt
+	fi
+	mkdir -p $mnt/nfsv$vers$proto || exit 1
+	mntpoint="-m $mnt/nfsv$vers$proto"
+	exportdir="-p $homedir/tmp/nfsv$vers$proto"
+	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
+	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
+	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
+		sudo umount $mnt/nfsv$vers$proto ) &
+	#echo -n "waiting...."
+	#wait
+}
+umountall()
+{
+	for proto in udp tcp
+	do
+		for vers in 2 3 4
+		do
+			[ -d /mnt/nfsv$vers$proto/`hostname -s`.test ] && 
+				sudo umount /mnt/nfsv$vers$proto
+		done
+	done
+	exit 0
+}
+trap 'echo SIGINT; pkill runcthon server; exit 1 ' SIGINT
+trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
+
+while [ -n "$1" ]
+do
+	case $1 in
+	"-u" )
+		umountall
+	;;
+	"-s" )
+		SRV="$2"
+		shift
+	;;
+	"-p" )
+		privatemnts=1
+	;;
+	esac	
+	shift
+done
+date
+cd /home/steved/work/cthon04 || exit 1
+for i in b g s l
+do
+	for j in krb5 krb5i krb5p
+	do
+		runtests -$i $SRV 3 udp $j
+		runtests -$i $SRV 3 tcp $j
+		runtests -$i $SRV 2 tcp $j
+		runtests -$i $SRV 2 udp $j
+		runtests -$i $SRV 4 udp $j
+
+		echo -n "Waiting for '$i' to finish..."
+		wait
+		echo -n "Done: "
+		date
+	done
+done

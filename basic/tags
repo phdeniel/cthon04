@@ -1,0 +1,170 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.6	//
+BIT	test6.c	53;"	d	file:
+BITMOD	test6.c	50;"	d	file:
+BUFSZ	test5.c	56;"	d	file:
+BUFSZ	test5a.c	55;"	d	file:
+BUFSZ	test5b.c	46;"	d	file:
+CLRBIT	test6.c	55;"	d	file:
+DOSorWIN32	subr.c	10;"	d	file:
+DOSorWIN32	test1.c	17;"	d	file:
+DOSorWIN32	test2.c	17;"	d	file:
+DOSorWIN32	test3.c	16;"	d	file:
+DOSorWIN32	test4.c	21;"	d	file:
+DOSorWIN32	test4a.c	20;"	d	file:
+DOSorWIN32	test5.c	22;"	d	file:
+DOSorWIN32	test5a.c	21;"	d	file:
+DOSorWIN32	test5b.c	18;"	d	file:
+DOSorWIN32	test6.c	18;"	d	file:
+DOSorWIN32	test7.c	19;"	d	file:
+DOSorWIN32	test7a.c	19;"	d	file:
+DOSorWIN32	test7b.c	19;"	d	file:
+DOSorWIN32	test8.c	20;"	d	file:
+DOSorWIN32	test9.c	24;"	d	file:
+DSIZE	test5.c	57;"	d	file:
+DSIZE	test5a.c	56;"	d	file:
+DSIZE	test5b.c	47;"	d	file:
+Dflag	subr.c	/^int Dflag = 0;$/;"	v
+Fflag	test1.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test2.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test3.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test4.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test4a.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test5.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test5a.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test5b.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test6.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test7.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test7a.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test7b.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test8.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Fflag	test9.c	/^static int Fflag = 0;	\/* test function only;  set count to 1, negate -t *\/$/;"	v	file:
+Iflag	test6.c	/^static int Iflag = 0;	\/* Ignore non-test files dir entries *\/$/;"	v	file:
+MAXFILES	test6.c	49;"	d	file:
+MIN	test5.c	53;"	d	file:
+MIN	test5a.c	52;"	d	file:
+MIN	test5b.c	43;"	d	file:
+Myname	subr.c	/^char *Myname;$/;"	v
+NNAME	test7.c	44;"	d	file:
+NNAME	test7a.c	42;"	d	file:
+NNAME	test7b.c	44;"	d	file:
+Nflag	test1.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test2.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test3.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test4.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test4a.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test5.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test5a.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test5b.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test6.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test7.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test7a.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test7b.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test8.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+Nflag	test9.c	/^static int Nflag = 0;	\/* Suppress directory operations *\/$/;"	v	file:
+O_SYNC	test5.c	24;"	d	file:
+O_SYNC	test5a.c	23;"	d	file:
+SETBIT	test6.c	54;"	d	file:
+SNAME	test8.c	46;"	d	file:
+Sflag	test1.c	/^static int Sflag = 0;	\/* don't print non-error messages *\/$/;"	v	file:
+Sflag	test5.c	/^static int Sflag = 0;	\/* use synchronous writes *\/$/;"	v	file:
+Sflag	test5a.c	/^static int Sflag = 0;	\/* use synchronous writes *\/$/;"	v	file:
+Tflag	test1.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test2.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test3.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test4.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test4a.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test5.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test5a.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test5b.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test6.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test7.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test7a.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test7b.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test8.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+Tflag	test9.c	/^static int Tflag = 0;	\/* print timing *\/$/;"	v	file:
+USE_OPEN	test5.c	49;"	d	file:
+USE_OPEN	test5a.c	48;"	d	file:
+bitmap	test6.c	/^static unsigned char bitmap[MAXFILES \/ BITMOD];$/;"	v	file:
+chdrive	subr.c	/^chdrive(char * path)$/;"	f	file:
+chdrive	subr.c	/^chdrive(path)$/;"	f	file:
+closedir	subr.c	/^closedir(DIR * dirp)$/;"	f
+closedir	subr.c	/^closedir(dirp)$/;"	f
+complete	subr.c	/^complete()$/;"	f
+copynametolower	subr.c	/^copynametolower(char * dest, char * src)$/;"	f	file:
+copynametolower	subr.c	/^copynametolower(dest, src)$/;"	f	file:
+currententry	subr.c	/^int currententry;$/;"	v
+dirlist	subr.c	/^struct dirent *dirlist;$/;"	v	typeref:struct:dirent
+diropen	subr.c	/^int diropen = 0;$/;"	v
+dirst	subr.c	/^DIR dirst;$/;"	v
+dirtree	subr.c	/^dirtree(lev, files, dirs, fname, dname, totfiles, totdirs)$/;"	f
+endtime	subr.c	/^endtime(tv)$/;"	f
+error	subr.c	/^error(char *str, ...)$/;"	f
+error	subr.c	/^error(str, ar1, ar2, ar3, ar4, ar5, ar6, ar7, ar8, ar9)$/;"	f
+findhandle	subr.c	/^long findhandle;$/;"	v
+findt_to_dirent	subr.c	/^findt_to_dirent(f, d)$/;"	f
+findt_to_dirent	subr.c	/^findt_to_dirent(struct dirent * d)$/;"	f
+findtst	subr.c	/^struct _finddata_t findtst;$/;"	v	typeref:struct:_finddata_t
+findtst	subr.c	/^struct find_t findtst;$/;"	v	typeref:struct:find_t
+getparm	subr.c	/^getparm(parm, min, label)$/;"	f
+gettimeofday	subr.c	/^gettimeofday(struct timeval *TV, struct timezone *TimeZone)$/;"	f
+lstat	subr.c	/^lstat(char * path, struct stat * buf)$/;"	f
+main	test1.c	/^main(argc, argv)$/;"	f
+main	test2.c	/^main(argc, argv)$/;"	f
+main	test3.c	/^main(argc, argv)$/;"	f
+main	test4.c	/^main(argc, argv)$/;"	f
+main	test4a.c	/^main(argc, argv)$/;"	f
+main	test5.c	/^main(argc, argv)$/;"	f
+main	test5a.c	/^main(argc, argv)$/;"	f
+main	test5b.c	/^main(argc, argv)$/;"	f
+main	test6.c	/^main(argc, argv)$/;"	f
+main	test7.c	/^main(argc, argv)$/;"	f
+main	test7a.c	/^main(argc, argv)$/;"	f
+main	test7b.c	/^main(argc, argv)$/;"	f
+main	test8.c	/^main(argc, argv)$/;"	f
+main	test9.c	/^main(argc, argv)$/;"	f
+maxentry	subr.c	/^int maxentry;$/;"	v
+mtestdir	subr.c	/^mtestdir(dir)$/;"	f
+opendir	subr.c	/^opendir(char * dirname)$/;"	f
+opendir	subr.c	/^opendir(dirname)$/;"	f
+pattern	subr.c	/^char pattern[MAXNAMLEN];$/;"	v
+readdir	subr.c	/^readdir(DIR * dirp)$/;"	f
+readdir	subr.c	/^readdir(dirp)$/;"	f
+rewinddir	subr.c	/^rewinddir(DIR * dirp)$/;"	f
+rewinddir	subr.c	/^rewinddir(dirp)$/;"	f
+rmdirtree	subr.c	/^rmdirtree(lev, files, dirs, fname, dname, totfiles, totdirs, ignore)$/;"	f
+seekdir	subr.c	/^seekdir(DIR * dirp, long loc)$/;"	f
+seekdir	subr.c	/^seekdir(dirp, loc)$/;"	f
+starttime	subr.c	/^starttime()$/;"	f
+statfs	subr.c	/^statfs(char * path, struct statfs * buf)$/;"	f
+statfs	subr.c	/^statfs(path, buf)$/;"	f
+strerror	subr.c	/^strerror(errval)$/;"	f
+te	subr.c	/^static struct timeval ts, te;$/;"	v	typeref:struct:	file:
+telldir	subr.c	/^telldir(DIR * dirp)$/;"	f
+telldir	subr.c	/^telldir(dirp)$/;"	f
+testdir	subr.c	/^testdir(dir)$/;"	f
+ts	subr.c	/^static struct timeval ts, te;$/;"	v	typeref:struct:timeval	file:
+unix_chdir	subr.c	/^unix_chdir(path)$/;"	f
+unix_mkdir	subr.c	/^unix_mkdir(const char * path, int mode)$/;"	f
+unix_mkdir	subr.c	/^unix_mkdir(path, mode)$/;"	f
+usage	test1.c	/^usage()$/;"	f	file:
+usage	test2.c	/^usage()$/;"	f	file:
+usage	test3.c	/^usage()$/;"	f	file:
+usage	test4.c	/^usage()$/;"	f	file:
+usage	test4a.c	/^usage()$/;"	f	file:
+usage	test5.c	/^usage()$/;"	f	file:
+usage	test5a.c	/^usage()$/;"	f	file:
+usage	test5b.c	/^usage()$/;"	f	file:
+usage	test6.c	/^usage()$/;"	f	file:
+usage	test7.c	/^usage()$/;"	f	file:
+usage	test7a.c	/^usage()$/;"	f	file:
+usage	test7b.c	/^usage()$/;"	f	file:
+usage	test8.c	/^usage()$/;"	f	file:
+usage	test9.c	/^usage()$/;"	f	file:
+win32_findclose	subr.c	/^win32_findclose(void)$/;"	f
+win32_findfirst	subr.c	/^win32_findfirst(char *pattern)$/;"	f
+win32_findnext	subr.c	/^win32_findnext(void)$/;"	f
