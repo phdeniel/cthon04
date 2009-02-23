@@ -128,6 +128,10 @@ do
 		minver=$2
 		shift
 	;;
+	"--help" )
+		echo "$Usage"
+		exit 1
+	;;
 	* )
 		echo "'$1' - invalid option"
 		echo "$Usage"
