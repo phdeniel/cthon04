@@ -1,8 +1,7 @@
 #!/bin/bash
 SRV=fedora9server
 privatemnts=0
-homedir="/home/tmp"
-homedir="/server/tmp"
+serverdir="/home/tmp"
 
 runtests()
 {
@@ -13,9 +12,9 @@ proto=$4
 sec=$5
 #echo "proto=$proto"
 #echo "sec=$sec"
-	[ $server = "gfiler" ] && homedir="/vol/vol3/tmp"
-	[ $server = "sol10" ] && homedir="/export/cthon_automount/tmp"
-	[ $server = "sol9" ] && homedir="/export/home/tmp"
+	[ $server = "gfiler" ] && serverdir="/vol/vol3/tmp"
+	[ $server = "sol10" ] && serverdir="/export/cthon_automount/tmp"
+	[ $server = "sol9" ] && serverdir="/export/home/tmp"
 
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
@@ -37,7 +36,7 @@ sec=$5
 	fi
 	mkdir -p $mnt/nfsv$vers$proto || exit 1
 	mntpoint="-m $mnt/nfsv$vers$proto"
-	exportdir="-p $homedir/nfsv$vers$proto"
+	exportdir="-p $serverdir/nfsv$vers$proto"
 	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
 	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
 	[ $? -ne 0 ] && echo "\nThe '$test' test using '$mntargs' args to  $SRV: Failed!!"
@@ -84,7 +83,8 @@ while [ -n "$1" ]
 do
 	case $1 in
 	"--mkdirs" )
-		cd $homedir && mkdirs
+		[ -n "$2" ] && serverdir="$2"
+		cd $serverdir && mkdirs
 		exit 0
 	;;
 	"--unmountall" )
@@ -98,7 +98,7 @@ do
 		privatemnts=1
 	;;
 	"--serverdir" )
-		homedir="$2"
+		serverdir="$2"
 		shift
 	;;
 	"-h" )
@@ -133,7 +133,7 @@ done
 date
 cd /home/steved/work/cthon04 || exit 1
 seclist="krb5 krb5i krb5p"
-echo "homedir=$homedir"
+echo "serverdir=$serverdir"
 for i in b g s l
 do
 	if [ "$onlykrb5" -eq 0 ]; then  
