@@ -18,9 +18,9 @@ sec=$5
 
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
-			mntargs="-F nfs4 -o proto=$proto,sec=$sec"
+			mntargs="-F nfs4 -o proto=$proto,sec=$sec,minorversion=$minver"
 		else
-			mntargs="-F nfs4 -o proto=$proto"
+			mntargs="-F nfs4 -o proto=$proto,minorversion=$minver"
 		fi
 	else
 		if [ -n "$sec" ] ; then
@@ -71,7 +71,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs --unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4"
+Usage="$0 --mkdirs --unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver"
 
 noudp=0
 dokrb5=0
@@ -79,6 +79,7 @@ onlykrb5=0
 nov4=0
 onlyv3=0
 onlyv4=0
+minver=0
 while [ -n "$1" ]
 do
 	case $1 in
@@ -122,6 +123,10 @@ do
 	;;
 	"--onlyv4" )
 		onlyv4=1
+	;;
+	"--minver" )
+		minver=$2
+		shift
 	;;
 	* )
 		echo "'$1' - invalid option"
