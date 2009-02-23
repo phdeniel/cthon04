@@ -160,8 +160,10 @@ do
 				runtests -$i $SRV 2 tcp ""
 			fi
 		fi
-		if [ "$nov4" -eq 0 ]; then
-			runtests -$i $SRV 4 tcp ""
+		if [ "$onlyv3" -ne 1 ]; then
+			if [ "$nov4" -eq 0 ]; then
+				runtests -$i $SRV 4 tcp ""
+			fi
 		fi
 	fi
 	echo -n "Waiting for '$i' to finish..."
