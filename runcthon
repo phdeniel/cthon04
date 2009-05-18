@@ -39,7 +39,10 @@ sec=$5
 	exportdir="-p $serverdir/nfsv$vers$proto"
 	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
 	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
-	[ $? -ne 0 ] && echo "\nThe '$test' test using '$mntargs' args to  $SRV: Failed!!"
+	[ $? -ne 0 ] && {
+		echo ""
+		echo "The '$test' test using '$mntargs' args to $SRV: Failed!!"
+	}
 	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
 		sudo umount $mnt/nfsv$vers$proto ) &
 	#echo -n "waiting...."
@@ -71,7 +74,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs --unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver"
+Usage="$0 --mkdirs|--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver"
 
 noudp=0
 dokrb5=0
