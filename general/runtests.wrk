@@ -54,16 +54,13 @@ echo ""
 echo "Small Compile"
 rm -f smcomp.time
 FILE=smcomp.time
-set -x
 $TIME $CC $CFLAGS -o stat stat.c -lm 2>> smcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o stat stat.c -lm 2>> smcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o stat stat.c -lm 2>> smcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o stat stat.c -lm 2>> smcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o stat stat.c -lm 2>> smcomp.time || eval $errexit
 ls  smcomp.time
-set -e
 ./stat smcomp.time
-set +e
 
 echo ""
 echo "Tbl"
@@ -73,13 +70,11 @@ $TIME tbl nroff.in > nroff.tbl 2>> tbl.time || cat tbl.time
 $TIME tbl nroff.in > nroff.tbl 2>> tbl.time || cat tbl.time
 $TIME tbl nroff.in > nroff.tbl 2>> tbl.time || cat tbl.time
 $TIME tbl nroff.in > nroff.tbl 2>> tbl.time || cat tbl.time
-set -e
 # Filter excessive noise from GNU tbl.  Should be harmless for other
 # versions of tbl.
 egrep -v '^tbl:.*$' <tbl.time >tbl.new
 mv -f tbl.new tbl.time
 ./stat tbl.time
-set +e
 
 echo ""
 echo "Nroff"
@@ -90,9 +85,7 @@ $TIME nroff < nroff.tbl > nroff.out 2>> nroff.time || cat nroff.time
 $TIME nroff < nroff.tbl > nroff.out 2>> nroff.time || cat nroff.time
 $TIME nroff < nroff.tbl > nroff.out 2>> nroff.time || cat nroff.time
 rm nroff.out nroff.tbl
-set -e
 ./stat nroff.time
-set +e
 
 echo ""
 echo "Large Compile"
@@ -104,9 +97,7 @@ $TIME $CC $CFLAGS -o large large.c 2>> lrgcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o large large.c 2>> lrgcomp.time || eval $errexit
 $TIME $CC $CFLAGS -o large large.c 2>> lrgcomp.time || eval $errexit
 rm large
-set -e
 ./stat lrgcomp.time
-set +e
 
 echo ""
 echo "Four simultaneous large compiles"
@@ -117,9 +108,7 @@ $TIME ./large4.sh 2>> 4lrg.time || eval $errexit
 $TIME ./large4.sh 2>> 4lrg.time || eval $errexit
 $TIME ./large4.sh 2>> 4lrg.time || eval $errexit
 $TIME ./large4.sh 2>> 4lrg.time || eval $errexit
-set -e
 ./stat 4lrg.time
-set +e
 
 echo ""
 echo "Makefile"
@@ -135,9 +124,7 @@ rmdummy
 # Remove warnings (e.g., due to clock skew) that might confuse "stat".
 grep -iv warning: makefile.time | grep -v 'make: ' > makefile.time2
 mv makefile.time2 makefile.time
-set -e
 ./stat makefile.time
-set +e
 
 echo ""
 echo "General tests complete"
