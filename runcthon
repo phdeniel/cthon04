@@ -18,9 +18,17 @@ sec=$5
 
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
-			mntargs="-F nfs4 -o proto=$proto,sec=$sec,minorversion=$minver"
+			if [ $minver -gt 0 ]; then  
+				mntargs="-F nfs4 -o proto=$proto,sec=$sec,minorversion=$minver"
+			else 
+				mntargs="-F nfs4 -o proto=$proto,sec=$sec"
+			fi
 		else
-			mntargs="-F nfs4 -o proto=$proto,minorversion=$minver"
+			if [ $minver -gt 0 ]; then  
+				mntargs="-F nfs4 -o proto=$proto,minorversion=$minver"
+			else 
+				mntargs="-F nfs4 -o proto=$proto"
+			fi
 		fi
 	else
 		if [ -n "$sec" ] ; then
@@ -72,7 +80,7 @@ mkdirs()
 	done
 	exit 0
 }
-trap 'echo SIGINT; pkill runcthon server; exit 1 ' SIGINT
+trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
 Usage="$0 --mkdirs|--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver"
 
@@ -168,33 +176,36 @@ do
 				runtests -$i $SRV 4 tcp ""
 			fi
 		fi
+		echo -n "Waiting for '$i' to finish..."
+		wait
 	fi
-	echo -n "Waiting for '$i' to finish..."
-	wait
 
-	if [ "$dokrb5" -eq 1 ]; then  
+	if [ "$onlykrb5" -eq 1 ]; then  
 		for j in krb5 krb5i krb5p
 		do
-			if ["$noudp" -ne 1 ]; then  
+			if [ "$noudp" -ne 1 ]; then  
 				if [ "$onlyv4" -eq 0 ]; then
 					runtests -$i $SRV 3 udp $j
-					if [ "$onlyv3" -eq 0 ]; then
+					if [ "$onlyv3" -eq 0 ]; then 
 						runtests -$i $SRV 2 udp $j
 					fi
 				fi
 			fi
-
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 tcp $j
 				if [ "$onlyv3" -eq 0 ]; then
 					runtests -$i $SRV 2 tcp $j
 				fi
 			fi
-			if [ "$nov4" -eq 0 ]; then
-				runtests -$i $SRV 4 tcp $j
+			if [ "$onlyv3" -ne 1 ]; then
+				if [ "$nov4" -eq 0 ]; then
+					runtests -$i $SRV 4 tcp $j
+				fi
 			fi
+			echo -n "Waiting for '$i' to finish..."
+			wait
+			echo -n "Done: "
+			date
 		done
 	fi
-	echo -n "Done: "
-	date
 done
