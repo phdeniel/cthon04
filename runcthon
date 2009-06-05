@@ -62,8 +62,12 @@ umountall()
 	do
 		for vers in 2 3 4
 		do
-			[ -d /mnt/nfsv$vers$proto/`hostname -s`.test ] && 
-				sudo umount /mnt/nfsv$vers$proto
+			for mnts in `cat /proc/mounts | grep nfs | awk '{print $2}'`
+			do
+				[ "/mnt/nfsv$vers$proto" = "$mnts" ] && {
+					sudo umount /mnt/nfsv$vers$proto
+				}
+			done
 		done
 	done
 	exit 0
