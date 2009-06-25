@@ -47,14 +47,12 @@ sec=$5
 	exportdir="-p $serverdir/nfsv$vers$proto"
 	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
 	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
+	echo ""
 	[ $? -ne 0 ] && {
-		echo ""
 		echo "The '$test' test using '$mntargs' args to $SRV: Failed!!"
 	}
 	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
 		sudo umount $mnt/nfsv$vers$proto ) &
-	#echo -n "waiting...."
-	#wait
 }
 umountall()
 {
@@ -208,8 +206,8 @@ do
 			fi
 			echo -n "Waiting for '$i' to finish..."
 			wait
-			echo -n "Done: "
-			date
 		done
 	fi
 done
+echo -n "Done:"
+date
