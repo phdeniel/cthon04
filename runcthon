@@ -180,8 +180,8 @@ do
 		fi
 		echo -n "Waiting for '$i' to finish..."
 		wait
-		echo -n "Done: "
-		date
+		echo -n " Done: "
+		date +"%X"
 	fi
 
 	if [ "$onlykrb5" -eq 1 ]; then  
@@ -208,8 +208,8 @@ do
 			fi
 			echo -n "Waiting for '$i' to finish..."
 			wait
-			echo -n "Done: "
-			date
+			echo -n " Done: "
+			date +"%X"
 		done
 	fi
 done
