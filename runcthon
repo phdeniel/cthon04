@@ -50,6 +50,7 @@ sec=$5
 	[ $? -ne 0 ] && {
 		echo ""
 		echo "The '$test' test using '$mntargs' args to $SRV: Failed!!"
+		mv /tmp/nfsv$vers$proto /tmp/nfsv$vers$proto.error
 	}
 	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
 		sudo umount $mnt/nfsv$vers$proto ) &
