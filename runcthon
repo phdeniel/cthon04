@@ -155,7 +155,6 @@ do
 	shift
 done
 date
-cd /home/steved/work/cthon04 || exit 1
 seclist="krb5 krb5i krb5p"
 echo "serverdir=$serverdir"
 for i in b g s l
