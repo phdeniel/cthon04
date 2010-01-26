@@ -53,7 +53,7 @@ sec=$5
 		mv /tmp/nfsv$vers$proto /tmp/nfsv$vers$proto-`date +"%H:%M:%S"`.error
 	}
 	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
-		sudo umount $mnt/nfsv$vers$proto ) &
+		./domount -u $mnt/nfsv$vers$proto ) &
 }
 umountall()
 {
@@ -64,7 +64,7 @@ umountall()
 			for mnts in `cat /proc/mounts | grep nfs | awk '{print $2}'`
 			do
 				[ "/mnt/nfsv$vers$proto" = "$mnts" ] && {
-					sudo umount /mnt/nfsv$vers$proto
+					./domount -u /mnt/nfsv$vers$proto
 				}
 			done
 		done
