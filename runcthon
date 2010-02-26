@@ -42,6 +42,8 @@ sec=$5
 	else
 		mnt=/mnt
 	fi
+	[ "$fsc" -eq 1 ] && mntargs="$mntargs,fsc"
+
 	mkdir -p $mnt/nfsv$vers$proto || exit 1
 	mntpoint="-m $mnt/nfsv$vers$proto"
 	exportdir="-p $serverdir/nfsv$vers$proto"
@@ -85,7 +87,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc"
 
 noudp=0
 dokrb5=0
@@ -94,6 +96,7 @@ nov4=0
 onlyv3=0
 onlyv4=0
 minver=0
+fsc=0
 while [ -n "$1" ]
 do
 	case $1 in
@@ -138,6 +141,9 @@ do
 	;;
 	"--onlyv4" )
 		onlyv4=1
+	;;
+	"--fsc" )
+		fsc=1
 	;;
 	"--minver" )
 		minver=$2
