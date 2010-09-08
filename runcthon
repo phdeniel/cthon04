@@ -30,15 +30,24 @@ sec=$5
 				mntargs="-F nfs4 -o proto=$proto"
 			fi
 		fi
+		if [ "$proto" = "rdma" ] ; then
+			mntargs="$mntargs,port=20049"
+			[ -n "$rdmaif" ] && server=$rdmaif
+		fi
 	else
 		if [ -n "$sec" ] ; then
 			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
 		else
 			mntargs="-o $proto,nfsvers=$vers"
 		fi
+		if [ "$proto" = "rdma" ] ; then
+			mntargs="$mntargs,port=20049"
+			[ -n "$rdmaif" ] && server=$rdmaif
+		fi
 	fi
+
 	if [ $privatemnts -eq 1 ]; then
-		mnt=/mnt/$SRV
+		mnt=/mnt/$server
 	else
 		mnt=/mnt
 	fi
@@ -47,11 +56,11 @@ sec=$5
 	mkdir -p $mnt/nfsv$vers$proto || exit 1
 	mntpoint="-m $mnt/nfsv$vers$proto"
 	exportdir="-p $serverdir/nfsv$vers$proto"
-	echo "./server $test $mntargs $mntpoint $exportdir $SRV"
-	(./server $test $mntargs $mntpoint $exportdir $SRV > /tmp/nfsv$vers$proto 2>&1 ;
+	echo "./server $test $mntargs $mntpoint $exportdir $server"
+	(./server $test $mntargs $mntpoint $exportdir $server > /tmp/nfsv$vers$proto 2>&1 ;
 	[ $? -ne 0 ] && {
 		echo ""
-		echo "The '$test' test using '$mntargs' args to $SRV: Failed!!"
+		echo "The '$test' test using '$mntargs' args to $server: Failed!!"
 		mv /tmp/nfsv$vers$proto /tmp/nfsv$vers$proto-`date +"%H:%M:%S"`.error
 	}
 	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
@@ -59,7 +68,13 @@ sec=$5
 }
 umountall()
 {
-	for proto in udp tcp
+	protos="udp tcp"
+	grep -q rdma /proc/mounts | grep -q nfs
+	if [ $? -eq 1 ] ; then
+		protos="$protos rdma"
+	fi
+
+	for proto in $protos
 	do
 		for vers in 2 3 4
 		do
@@ -76,7 +91,9 @@ umountall()
 }
 mkdirs()
 {
-	for proto in udp tcp
+	protos="udp tcp"
+	[ "$rdma" -eq 1 ] && protos="$proto rdma"
+	for proto in $protos
 	do
 		for vers in 2 3 4
 		do
@@ -88,7 +105,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma"
 
 noudp=0
 dokrb5=0
@@ -98,6 +115,9 @@ onlyv3=0
 onlyv4=0
 minver=0
 fsc=0
+rdma=0
+rdmaif=0
+onlyrdma=0
 while [ -n "$1" ]
 do
 	case $1 in
@@ -146,6 +166,17 @@ do
 	"--fsc" )
 		fsc=1
 	;;
+	"--rdma" )
+		rdma=1
+	;;
+	"--onlyrdma" )
+		rdma=1
+		onlyrdma=1
+	;;
+	"--rdmaif" )
+		rdmaif=$2
+		shift
+	;;
 	"--minver" )
 		minver=$2
 		shift
@@ -167,7 +198,7 @@ echo "serverdir=$serverdir"
 for i in b g s l
 do
 	if [ "$onlykrb5" -eq 0 ]; then  
-		if [ "$noudp" -ne 1 ]; then  
+		if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 udp ""
 				if [ "$onlyv3" -eq 0 ]; then 
@@ -175,15 +206,28 @@ do
 				fi
 			fi
 		fi
-		if [ "$onlyv4" -eq 0 ]; then
+		if [ "$onlyv4" -eq 0 -a "$onlyrdma" -eq 0 ]; then
 			runtests -$i $SRV 3 tcp ""
 			if [ "$onlyv3" -eq 0 ]; then
 				runtests -$i $SRV 2 tcp ""
 			fi
 		fi
-		if [ "$onlyv3" -ne 1 ]; then
+		if [ "$onlyv3" -ne 1 -a "$onlyrdma" -eq 0 ]; then
 			if [ "$nov4" -eq 0 ]; then
 				runtests -$i $SRV 4 tcp ""
+			fi
+		fi
+		if [ "$rdma" -eq 1 ]; then
+			if [ "$onlyv4" -eq 0 ]; then
+				runtests -$i $SRV 3 rdma ""
+				if [ "$onlyv3" -eq 0 ]; then
+					runtests -$i $SRV 2 rdma ""
+				fi
+			fi
+			if [ "$onlyv3" -ne 1 ]; then
+				if [ "$nov4" -eq 0 ]; then
+					runtests -$i $SRV 4 rdma ""
+				fi
 			fi
 		fi
 		echo -n "Waiting for '$i' to finish..."
