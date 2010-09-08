@@ -87,6 +87,11 @@ umountall()
 			done
 		done
 	done
+
+	if grep -q nfsv /proc/mounts ; then
+		exit 1
+	fi
+
 	exit 0
 }
 mkdirs()
