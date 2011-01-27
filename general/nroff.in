@@ -39,11 +39,11 @@ A prime number generator.
 .LP
 .TS
 center;
- c|c|c s|c s|
- c|c|c s|c s|
- c|c|c s|c s|
- c|c|c s|c s|
-|l|n|n|n|n|n|.
+ c|c|c s|
+ c|c|c s|
+ c|c|c s|
+ c|c|c s|
+|l|n|n|n|.
 	_	_	_	_	_
 .sp 4p
 	Matrix Inversion	Bubble Sort	Prime Numbers
