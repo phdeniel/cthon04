@@ -30,7 +30,7 @@ main(argc, argv)
 {
 	FILE	*fp;
 	int	i, n;
-	char	c, *fmt;
+	char	c, *fmt, buf[BUFSIZ];
 	int	attfmt = 0;	/* set if using att time format */
 
 	Prog = argv[0];
@@ -45,6 +45,7 @@ main(argc, argv)
 			Prog, File);
 		exit(1);
 	}
+getnewch:
 	if ((i = fgetc(fp)) == EOF) {
 		fprintf(stderr, "%s: %s is empty\n",
 			Prog, File);
@@ -53,8 +54,12 @@ main(argc, argv)
 	c = i & 0x7f;
 	if (c == '\n' || c == '\r' || c == 'r')
 		attfmt = 1;
-	else
+	else if (isdigit(c))
 		fmt = "%lf %*s %lf %*s %lf %*s";	/* BSD fmt */
+	else { /* skip the line */
+		fgets(buf, BUFSIZ, fp);
+		goto getnewch;
+	}
 	if (ungetc(c, fp) == EOF) {
 		fprintf(stderr, "%s: can't push char back to %s\n",
 			Prog, File);
