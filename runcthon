@@ -63,8 +63,11 @@ sec=$5
 		echo "The '$test' test using '$mntargs' args to $server: Failed!!"
 		mv /tmp/nfsv$vers$proto /tmp/nfsv$vers$proto-`date +"%H:%M:%S"`.error
 	}
-	[ -d $mnt/nfsv$vers$proto/`hostname -s`.test ] && 
-		./domount -u $mnt/nfsv$vers$proto ) &
+	cnt=`grep -c nfsv$vers$proto /proc/mounts`
+	if [ $cnt -gt 0 ]; then
+		sudo umount $mnt/nfsv$vers$proto
+	fi
+	)
 }
 umountall()
 {
