@@ -113,8 +113,9 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
 
+nolcks=0
 noudp=0
 dokrb5=0
 onlykrb5=0
@@ -165,6 +166,9 @@ do
 	"--nov4" )
 		nov4=1
 	;;
+	"--nolcks" )
+		nolcks=1
+	;;
 	"--onlyv3" )
 		onlyv3=1
 	;;
@@ -203,7 +207,9 @@ done
 date
 seclist="krb5 krb5i krb5p"
 echo "serverdir=$serverdir"
-for i in b g s l
+tests="b g s l"
+[ "$nolcks" -eq 1 ] && tests="b g s"
+for i in $tests
 do
 	if [ "$onlykrb5" -eq 0 ]; then  
 		if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
