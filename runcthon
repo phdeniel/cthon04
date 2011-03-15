@@ -67,7 +67,7 @@ sec=$5
 	if [ $cnt -gt 0 ]; then
 		sudo umount $mnt/nfsv$vers$proto
 	fi
-	)
+	) &
 }
 umountall()
 {
