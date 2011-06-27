@@ -98,7 +98,7 @@ static bool_t xdr_rmtcallres ARGS_((XDR *, struct rmtcallres *));
 #define RPROC_NUM (u_long)1
 #endif
 
-static enum clnt_stat clnt_broadcast ARGS_((int, unsigned long, unsigned long,
+static enum clnt_stat clnt_broadcast_time ARGS_((int, unsigned long, unsigned long,
 		unsigned long, xdrproc_t, void *, xdrproc_t, void *,
 		resultproc_t, struct timeval *));
 
@@ -174,7 +174,7 @@ main(argc, argv)
 		 * XXX shouldn't have to cast eachresult?
 		 */
 		clnt_stat =
-		    clnt_broadcast(sock, RPROG, RVERS, RPROC_NUM, xdr_void, &a,
+		    clnt_broadcast_time(sock, RPROG, RVERS, RPROC_NUM, xdr_void, &a,
 		    xdr_void, &b, (resultproc_t)eachresult, &t);
 		if(clnt_stat != RPC_TIMEDOUT) {
 			printf("error: clnt_stat = %d\n", clnt_stat);
@@ -305,7 +305,8 @@ getbroadcastnets(sock, buf)
 }
 
 static enum clnt_stat 
-clnt_broadcast(sock, prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult, t)
+clnt_broadcast_time(sock, prog, vers, proc, xargs, argsp, xresults,
+			resultsp, eachresult, t)
 	int		sock;
 #ifdef SVR3
 	ulong		prog;		/* program number */
