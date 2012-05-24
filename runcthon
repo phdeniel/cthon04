@@ -34,6 +34,16 @@ sec=$5
 			mntargs="$mntargs,port=20049"
 			[ -n "$rdmaif" ] && server=$rdmaif
 		fi
+	elif [ $vers = "41" ]; then
+		if [ -n "$sec" ] ; then
+			mntargs="-F nfs4 -o proto=$proto,sec=$sec,minorversion=1"
+		else
+			mntargs="-F nfs4 -o proto=$proto,minorversion=1"
+		fi
+		if [ "$proto" = "rdma" ] ; then
+			mntargs="$mntargs,port=20049"
+			[ -n "$rdmaif" ] && server=$rdmaif
+		fi
 	else
 		if [ -n "$sec" ] ; then
 			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
@@ -79,7 +89,7 @@ umountall()
 
 	for proto in $protos
 	do
-		for vers in 2 3 4
+		for vers in 2 3 4 41
 		do
 			for mnts in `cat /proc/mounts | grep nfs | awk '{print $2}'`
 			do
@@ -103,9 +113,10 @@ mkdirs()
 	[ "$rdma" -eq 1 ] && protos="$proto rdma"
 	for proto in $protos
 	do
-		for vers in 2 3 4
+		for vers in 2 3 4 41
 		do
 			[ "$proto" == "udp" -a "$vers" == "4" ] && continue
+			[ "$proto" == "udp" -a "$vers" == "41" ] && continue
 			mkdir ./nfsv$vers$proto
 		done
 	done
@@ -113,7 +124,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
 
 nolcks=0
 noudp=0
@@ -197,6 +208,9 @@ do
 		minver=$2
 		shift
 	;;
+	"--dov41" )
+		dov41=1
+	;;
 	"--help" )
 		echo "$Usage"
 		exit 1
@@ -213,7 +227,6 @@ seclist="krb5 krb5i krb5p"
 echo "serverdir=$serverdir"
 tests="b g s l"
 [ "$nolcks" -eq 1 ] && tests="b g s"
-echo onlyv3=$onlyv3 nov2=$nov2
 for i in $tests
 do
 	if [ "$onlykrb5" -eq 0 ]; then  
@@ -234,6 +247,9 @@ do
 		if [ "$onlyv3" -ne 1 -a "$onlyrdma" -eq 0 ]; then
 			if [ "$nov4" -eq 0 ]; then
 				runtests -$i $SRV 4 tcp ""
+				if [ "$dov41" -eq 1 ]; then
+					runtests -$i $SRV 41 tcp ""
+				fi
 			fi
 		fi
 		if [ "$rdma" -eq 1 ]; then
@@ -246,6 +262,9 @@ do
 			if [ "$onlyv3" -ne 1 ]; then
 				if [ "$nov4" -eq 0 ]; then
 					runtests -$i $SRV 4 rdma ""
+					if [ "$dov41" -eq 1 ]; then
+						runtests -$i $SRV 41 rdma ""
+					fi
 				fi
 			fi
 		fi
