@@ -113,13 +113,14 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
 
 nolcks=0
 noudp=0
 dokrb5=0
 onlykrb5=0
 nov4=0
+nov2=0
 onlyv3=0
 onlyv4=0
 minver=0
@@ -166,6 +167,9 @@ do
 	"--nov4" )
 		nov4=1
 	;;
+	"--nov2" )
+		nov2=1
+	;;
 	"--nolcks" )
 		nolcks=1
 	;;
@@ -209,20 +213,21 @@ seclist="krb5 krb5i krb5p"
 echo "serverdir=$serverdir"
 tests="b g s l"
 [ "$nolcks" -eq 1 ] && tests="b g s"
+echo onlyv3=$onlyv3 nov2=$nov2
 for i in $tests
 do
 	if [ "$onlykrb5" -eq 0 ]; then  
 		if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 udp ""
-				if [ "$onlyv3" -eq 0 ]; then 
+				if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then 
 					runtests -$i $SRV 2 udp ""
 				fi
 			fi
 		fi
 		if [ "$onlyv4" -eq 0 -a "$onlyrdma" -eq 0 ]; then
 			runtests -$i $SRV 3 tcp ""
-			if [ "$onlyv3" -eq 0 ]; then
+			if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then
 				runtests -$i $SRV 2 tcp ""
 			fi
 		fi
@@ -234,7 +239,7 @@ do
 		if [ "$rdma" -eq 1 ]; then
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 rdma ""
-				if [ "$onlyv3" -eq 0 ]; then
+				if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then
 					runtests -$i $SRV 2 rdma ""
 				fi
 			fi
@@ -256,14 +261,14 @@ do
 			if [ "$noudp" -ne 1 ]; then  
 				if [ "$onlyv4" -eq 0 ]; then
 					runtests -$i $SRV 3 udp $j
-					if [ "$onlyv3" -eq 0 ]; then 
+					if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then 
 						runtests -$i $SRV 2 udp $j
 					fi
 				fi
 			fi
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 tcp $j
-				if [ "$onlyv3" -eq 0 ]; then
+				if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then
 					runtests -$i $SRV 2 tcp $j
 				fi
 			fi
