@@ -137,13 +137,13 @@ trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
 Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
 
 nolcks=0
-noudp=0
+noudp=1
 dokrb5=0
 onlykrb5=0
 nov4=0
 dov41=0
 dov42=0
-nov2=0
+nov2=1
 onlyv3=0
 onlyv4=0
 minver=0
