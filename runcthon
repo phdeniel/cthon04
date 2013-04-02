@@ -44,6 +44,16 @@ sec=$5
 			mntargs="$mntargs,port=20049"
 			[ -n "$rdmaif" ] && server=$rdmaif
 		fi
+	elif [ $vers = "42" ]; then
+		if [ -n "$sec" ] ; then
+			mntargs="-F nfs4 -o proto=$proto,sec=$sec,minorversion=2"
+		else
+			mntargs="-F nfs4 -o proto=$proto,minorversion=2"
+		fi
+		if [ "$proto" = "rdma" ] ; then
+			mntargs="$mntargs,port=20049"
+			[ -n "$rdmaif" ] && server=$rdmaif
+		fi
 	else
 		if [ -n "$sec" ] ; then
 			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
@@ -89,7 +99,7 @@ umountall()
 
 	for proto in $protos
 	do
-		for vers in 2 3 4 41
+		for vers in 2 3 4 41 42
 		do
 			for mnts in `cat /proc/mounts | grep nfs | awk '{print $2}'`
 			do
@@ -113,7 +123,7 @@ mkdirs()
 	[ "$rdma" -eq 1 ] && protos="$proto rdma"
 	for proto in $protos
 	do
-		for vers in 2 3 4 41
+		for vers in 2 3 4 41 42
 		do
 			[ "$proto" == "udp" -a "$vers" == "4" ] && continue
 			[ "$proto" == "udp" -a "$vers" == "41" ] && continue
@@ -124,7 +134,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
 
 nolcks=0
 noudp=0
@@ -132,6 +142,7 @@ dokrb5=0
 onlykrb5=0
 nov4=0
 dov41=0
+dov42=0
 nov2=0
 onlyv3=0
 onlyv4=0
@@ -212,6 +223,9 @@ do
 	"--dov41" )
 		dov41=1
 	;;
+	"--dov42" )
+		dov42=1
+	;;
 	"--help" )
 		echo "$Usage"
 		exit 1
@@ -251,6 +265,9 @@ do
 				if [ "$dov41" -eq 1 ]; then
 					runtests -$i $SRV 41 tcp ""
 				fi
+				if [ "$dov42" -eq 1 ]; then
+					runtests -$i $SRV 42 tcp ""
+				fi
 			fi
 		fi
 		if [ "$rdma" -eq 1 ]; then
@@ -265,6 +282,9 @@ do
 					runtests -$i $SRV 4 rdma ""
 					if [ "$dov41" -eq 1 ]; then
 						runtests -$i $SRV 41 rdma ""
+					fi
+					if [ "$dov42" -eq 1 ]; then
+						runtests -$i $SRV 42 rdma ""
 					fi
 				fi
 			fi
