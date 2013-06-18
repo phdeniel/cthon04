@@ -244,7 +244,7 @@ tests="b g s l"
 [ "$nolcks" -eq 1 ] && tests="b g s"
 for i in $tests
 do
-	if [ "$onlykrb5" -eq 0 ]; then  
+	if [ "$onlykrb5" -eq 0 -a $dokrb5 -eq 0 ]; then  
 		if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 udp ""
@@ -295,10 +295,10 @@ do
 		date +"%X"
 	fi
 
-	if [ "$onlykrb5" -eq 1 ]; then  
+	if [ "$onlykrb5" -eq 1 -o $dokrb5 -eq 1 ]; then  
 		for j in krb5 krb5i krb5p
 		do
-			if [ "$noudp" -ne 1 ]; then  
+			if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
 				if [ "$onlyv4" -eq 0 ]; then
 					runtests -$i $SRV 3 udp $j
 					if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then 
@@ -306,15 +306,40 @@ do
 					fi
 				fi
 			fi
-			if [ "$onlyv4" -eq 0 ]; then
+			if [ "$onlyv4" -eq 0 -a "$onlyrdma" -eq 0 ]; then
 				runtests -$i $SRV 3 tcp $j
 				if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then
 					runtests -$i $SRV 2 tcp $j
 				fi
 			fi
-			if [ "$onlyv3" -ne 1 ]; then
+			if [ "$onlyv3" -ne 1 -a "$onlyrdma" -eq 0 ]; then
 				if [ "$nov4" -eq 0 ]; then
 					runtests -$i $SRV 4 tcp $j
+					if [ "$dov41" -eq 1 ]; then
+						runtests -$i $SRV 41 tcp $j
+					fi
+					if [ "$dov42" -eq 1 ]; then
+						runtests -$i $SRV 42 tcp $j
+					fi
+				fi
+			fi
+			if [ "$rdma" -eq 1 ]; then
+				if [ "$onlyv4" -eq 0 ]; then
+					runtests -$i $SRV 3 rdma $j
+					if [ "$onlyv3" -eq 0 -a "$nov2" -eq 0 ]; then
+						runtests -$i $SRV 2 rdma $j
+					fi
+				fi
+				if [ "$onlyv3" -ne 1 ]; then
+					if [ "$nov4" -eq 0 ]; then
+						runtests -$i $SRV 4 rdma $j
+						if [ "$dov41" -eq 1 ]; then
+							runtests -$i $SRV 41 rdma $j
+						fi
+						if [ "$dov42" -eq 1 ]; then
+							runtests -$i $SRV 42 rdma $j
+						fi
+					fi
 				fi
 			fi
 			echo -n "Waiting for '$i' to finish..."
