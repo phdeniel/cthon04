@@ -2,8 +2,6 @@
 SRV=fedora9server
 privatemnts=0
 serverdir="/home/tmp"
-#port="2050"
-port=""
 
 runtests()
 {
@@ -137,7 +135,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks"
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks|--port="
 
 nolcks=0
 noudp=1
@@ -151,6 +149,8 @@ onlyv3=0
 onlyv4=0
 minver=0
 fsc=0
+# Note port="2050" for Panasas server
+port=""
 rdma=0
 rdmaif=0
 onlyrdma=0
@@ -214,6 +214,10 @@ do
 	"--onlyrdma" )
 		rdma=1
 		onlyrdma=1
+	;;
+	"--port" )
+		port=$2
+		shift
 	;;
 	"--rdmaif" )
 		rdmaif=$2
