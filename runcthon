@@ -2,6 +2,8 @@
 SRV=fedora9server
 privatemnts=0
 serverdir="/home/tmp"
+#port="2050"
+port=""
 
 runtests()
 {
@@ -72,6 +74,7 @@ sec=$5
 		mnt=/mnt
 	fi
 	[ "$fsc" -eq 1 ] && mntargs="$mntargs,fsc"
+	[ -n "$port" ] && mntargs="$mntargs,port=$port"
 
 	mkdir -p $mnt/nfsv$vers$proto || exit 1
 	mntpoint="-m $mnt/nfsv$vers$proto"
