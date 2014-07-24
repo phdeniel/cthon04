@@ -99,7 +99,11 @@ umountall()
 	fi
 
 	if [ $privatemnts -eq 1 ]; then
-		mnt=/mnt/$server
+		if [ "$SRV" = "" ] ; then
+			echo "--server has to be set on private unmounts"
+			exit 1
+		fi
+		mnt=/mnt/$SRV
 	else
 		mnt=/mnt
 	fi
