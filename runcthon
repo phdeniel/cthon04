@@ -84,7 +84,7 @@ sec=$5
 		echo "The '$test' test using '$mntargs' args to $server: Failed!!"
 		mv /tmp/nfsv$vers$proto /tmp/nfsv$vers$proto-`date +"%H:%M:%S"`.error
 	}
-	cnt=`grep -c nfsv$vers$proto /proc/mounts`
+	cnt=`grep -c $mnt/nfsv$vers$proto /proc/mounts`
 	if [ $cnt -gt 0 ]; then
 		sudo umount $mnt/nfsv$vers$proto
 	fi
@@ -98,15 +98,21 @@ umountall()
 		protos="$protos rdma"
 	fi
 
+	if [ $privatemnts -eq 1 ]; then
+		mnt=/mnt/$server
+	else
+		mnt=/mnt
+	fi
+
 	for proto in $protos
 	do
 		for vers in 2 3 4 41 42
 		do
 			for mnts in `cat /proc/mounts | grep nfs | awk '{print $2}'`
 			do
-				[ "/mnt/nfsv$vers$proto" = "$mnts" ] && {
-					echo "sudo umount /mnt/nfsv$vers$proto"
-					sudo umount /mnt/nfsv$vers$proto
+				[ "$mnt/nfsv$vers$proto" = "$mnts" ] && {
+					echo "sudo umount $mnt/nfsv$vers$proto"
+					sudo umount $mnt/nfsv$vers$proto
 				}
 			done
 		done
