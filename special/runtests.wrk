@@ -25,7 +25,12 @@ TMPDIR= ./op_unlk
 
 echo ""
 echo "check for proper open/rename operation"
-TMPDIR= ./op_ren
+if [ "$CIFS" = "yes" ] && echo $MNTOPTIONS | grep -E "vers=2|vers=3" > /dev/null
+then
+	echo "skipping test; not supported by SMB 2.0 and higher versions"
+else
+	TMPDIR= ./op_ren
+fi
 
 echo ""
 echo "check for proper open/chmod 0 operation"
@@ -93,7 +98,7 @@ echo "write/read" $size "MB file"
 
 echo ""
 echo "write/read at 2GB, 4GB edges"
-if echo $MNTOPTIONS | grep vers=2 > /dev/null
+if [ "$CIFS" != "yes" ] && echo $MNTOPTIONS | grep vers=2 > /dev/null
 then
 	echo "skipping test; not supported with v2"
 else

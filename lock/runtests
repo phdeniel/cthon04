@@ -36,7 +36,7 @@ case $TESTARG in
 	-t)	TESTARGS="-r"	;;
 esac
 
-if echo "$mntopts" | grep vers=2 > /dev/null
+if [ "$CIFS" != "yes" ] && echo "$mntopts" | grep vers=2 > /dev/null
 then
 	TESTARGS="-v 2 $TESTARGS"
 fi
@@ -52,7 +52,8 @@ do
 		tlock)		echo 'Testing native pre-LFS locking';;
 		tlocklfs)	echo 'Testing native post-LFS locking';;
 		tlock64)
-			if echo "$mntopts" | grep vers=2 > /dev/null
+			if [ "$CIFS" != "yes" ] &&
+			   echo "$mntopts" | grep vers=2 > /dev/null
 			then
 			echo "64-bit locking not supported with NFS v2"
 				echo " "
