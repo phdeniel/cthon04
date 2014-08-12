@@ -46,3 +46,6 @@ tools/tcp
 tools/tcpd
 tools/udp
 tools/udpd
+all
+*/all
+cscope.*
