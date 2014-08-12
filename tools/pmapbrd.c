@@ -174,8 +174,8 @@ main(argc, argv)
 		 * XXX shouldn't have to cast eachresult?
 		 */
 		clnt_stat =
-		    clnt_broadcast_time(sock, RPROG, RVERS, RPROC_NUM, xdr_void, &a,
-		    xdr_void, &b, (resultproc_t)eachresult, &t);
+		    clnt_broadcast_time(sock, RPROG, RVERS, RPROC_NUM, (xdrproc_t)xdr_void, &a,
+		    (xdrproc_t)xdr_void, &b, (resultproc_t)eachresult, &t);
 		if(clnt_stat != RPC_TIMEDOUT) {
 			printf("error: clnt_stat = %d\n", clnt_stat);
 			clnt_perrno(clnt_stat);
@@ -245,7 +245,7 @@ xdr_rmtcallres(xdrs, crp)
 #ifdef SVR3
 	if (xdr_reference(xdrs, (caddr_t *)&crp->port_ptr, sizeof (ulong), xdr_u_long) &&
 #else
-	if (xdr_reference(xdrs, (caddr_t *)&crp->port_ptr, sizeof (u_long), xdr_u_long) &&
+	if (xdr_reference(xdrs, (caddr_t *)&crp->port_ptr, sizeof (u_long), (xdrproc_t)xdr_u_long) &&
 #endif
 		xdr_u_long(xdrs, &crp->resultslen))
 		return ((*(crp->xdr_results))(xdrs, crp->results_ptr));
@@ -387,7 +387,7 @@ clnt_broadcast_time(sock, prog, vers, proc, xargs, argsp, xresults,
 recv_again:
 	msg.acpted_rply.ar_verf = _null_auth;
 	msg.acpted_rply.ar_results.where = (caddr_t)&r;
-	msg.acpted_rply.ar_results.proc = xdr_rmtcallres;
+	msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_rmtcallres;
 	readfds = mask;
 	switch (select(32, (fd_set *)&readfds, (fd_set *)NULL, (fd_set *)NULL,
 			t)) {
@@ -447,7 +447,7 @@ try_again:
 		/* otherwise, just random garbage */
 	}
 	xdrs->x_op = XDR_FREE;
-	msg.acpted_rply.ar_results.proc = xdr_void;
+	msg.acpted_rply.ar_results.proc = (xdrproc_t)xdr_void;
 	(void)xdr_replymsg(xdrs, &msg);
 	(void)(*xresults)(xdrs, resultsp);
 	xdr_destroy(xdrs);
