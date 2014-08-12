@@ -142,7 +142,7 @@ mkdirs()
 }
 trap 'echo SIGINT; pkill runcthon; pkill server; exit 1 ' SIGINT
 trap 'echo; echo -n "Done:";  date; exit 2' SIGTERM
-Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks|--port="
+Usage="$0 --mkdirs [dir] |--unmountall|--server|--serverdir|--noudp|--dokrb5|--onlykrb5|--nov4|--nov2|--onlyv3|--onlyv4|--dov41|--dov42|--minver <ver>|--fsc|--rdma|--rdmaif <addr>|--onlyrdma|--nolcks|--port <port>"
 
 nolcks=0
 noudp=1
