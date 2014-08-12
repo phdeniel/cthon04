@@ -19,15 +19,15 @@ sec=$5
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
 			if [ $minver -gt 0 ]; then  
-				mntargs="-F nfs4 -o proto=$proto,sec=$sec,v4.$minver"
+				mntargs="-o proto=$proto,sec=$sec,v4.$minver"
 			else 
-				mntargs="-F nfs4 -o proto=$proto,sec=$sec"
+				mntargs="-o proto=$proto,sec=$sec,v4"
 			fi
 		else
 			if [ $minver -gt 0 ]; then  
-				mntargs="-F nfs4 -o proto=$proto,v4.$minver"
+				mntargs="-o proto=$proto,v4.$minver"
 			else 
-				mntargs="-F nfs4 -o proto=$proto"
+				mntargs="-o proto=$proto,v4"
 			fi
 		fi
 		if [ "$proto" = "rdma" ] ; then
@@ -36,9 +36,9 @@ sec=$5
 		fi
 	elif [ $vers = "41" ]; then
 		if [ -n "$sec" ] ; then
-			mntargs="-F nfs4 -o proto=$proto,sec=$sec,v4.1"
+			mntargs="-o proto=$proto,sec=$sec,v4.1"
 		else
-			mntargs="-F nfs4 -o proto=$proto,v4.1"
+			mntargs="-o proto=$proto,v4.1"
 		fi
 		if [ "$proto" = "rdma" ] ; then
 			mntargs="$mntargs,port=20049"
@@ -46,9 +46,9 @@ sec=$5
 		fi
 	elif [ $vers = "42" ]; then
 		if [ -n "$sec" ] ; then
-			mntargs="-F nfs4 -o proto=$proto,sec=$sec,v4.2"
+			mntargs="-o proto=$proto,sec=$sec,v4.2"
 		else
-			mntargs="-F nfs4 -o proto=$proto,v4.2"
+			mntargs="-o proto=$proto,v4.2"
 		fi
 		if [ "$proto" = "rdma" ] ; then
 			mntargs="$mntargs,port=20049"
