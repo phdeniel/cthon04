@@ -35,6 +35,10 @@ MOUNTCMD='./domount -t $FSOPT -o $MNTOPTIONS $SERVER\:$SERVPATH $MNTPOINT'
 #	DG/UX
 #MOUNTCMD='./domount -t nfs -o $MNTOPTIONS $SERVER\:$SERVPATH $MNTPOINT'
 
+# Use this mount command if using:
+#	SMB/CIFS
+#MOUNTCMD='./domount -t cifs -o $MNTOPTIONS //$SERVER/$SERVPATH $MNTPOINT'
+
 UMOUNTCMD='./domount -u $MNTPOINT'
 
 # Use the next two lines if using:
