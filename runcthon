@@ -12,9 +12,6 @@ proto=$4
 sec=$5
 #echo "proto=$proto"
 #echo "sec=$sec"
-	[ $server = "gfiler" ] && serverdir="/vol/vol3/tmp"
-	[ $server = "sol10" ] && serverdir="/export/cthon_automount/tmp"
-	[ $server = "sol9" ] && serverdir="/export/home/tmp"
 
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
