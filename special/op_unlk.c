@@ -33,6 +33,7 @@
 
 #define TBUFSIZ 100
 static char wbuf[TBUFSIZ], rbuf[TBUFSIZ];
+static char buf[BUFSIZ];
 #define TMSG "This is a test message written to the unlinked file\n"
 
 static void
@@ -78,13 +79,14 @@ main(argc, argv)
 #ifndef WIN32
 	/* For WIN you can not delete the file if it is open */
 	printf("nfsjunk files before unlink:\n  ");
-	system("ls -al .nfs*");
+	sprintf(buf, "ls -al %s", tname);
+	system(buf);
 	ret = unlink(tname);
 	printf("%s open; unlink ret = %d\n", tname, ret);
 	if (ret)
 		xxit(" unlink");
 	printf("nfsjunk files after unlink:\n  ");
-	system("ls -al .nfs*");
+	system(buf);
 #endif
 	strcpy(wbuf, TMSG);
 	if ((ret = write(fd, wbuf, TBUFSIZ)) != TBUFSIZ) {
@@ -137,7 +139,7 @@ main(argc, argv)
 
 #ifndef WIN32
 	printf("nfsjunk files after close:\n  ");
-	system("ls -al .nfs*");
+	system(buf);
 #endif
 
 	if ((ret = close(fd)) == 0) {

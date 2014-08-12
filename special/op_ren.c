@@ -32,6 +32,8 @@
 
 #define TBUFSIZ 100
 static char wbuf[TBUFSIZ], rbuf[TBUFSIZ];
+static char bufa[BUFSIZ];
+static char bufb[BUFSIZ];
 #define TMSG "This is a test message written to the target file\n"
 
 static void
@@ -120,13 +122,19 @@ main(argc, argv)
 #endif /* O_RDWR */
 
 	printf("nfsjunk files before rename:\n  ");
-	system("ls -al .nfs*");
+	sprintf(bufa, "ls -al %s", taname);
+	sprintf(bufb, "ls -al %s", tbname);
+	system(bufa);
+	printf("  ");
+	system(bufb);
 	ret = rename(taname, tbname);
 	printf("%s open; rename ret = %d\n", tbname, ret);
 	if (ret)
 		xxit(" unlink");
 	printf("nfsjunk files after rename:\n  ");
-	system("ls -al .nfs*");
+	system(bufa);
+	printf("  ");
+	system(bufb);
 	strcpy(wbuf, TMSG);
 	if ((ret = write(fd, wbuf, TBUFSIZ)) != TBUFSIZ) {
 		fprintf(stderr, "write ret %d; expected %d\n", ret, TBUFSIZ);
@@ -165,7 +173,9 @@ main(argc, argv)
 	}
 
 	printf("nfsjunk files after close:\n  ");
-	system("ls -al .nfs*");
+	system(bufa);
+	printf("  ");
+	system(bufb);
 
 	if ((ret = close(fd)) == 0) {
 		errcount++;
