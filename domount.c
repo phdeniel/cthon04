@@ -8,6 +8,9 @@
  */
 
 #include <stdio.h>
+#ifdef LINUX
+#include <stdlib.h>
+#endif
 
 main(argc, argv)
 	int argc;

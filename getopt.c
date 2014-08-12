@@ -36,6 +36,9 @@
 	(void) write(2, errbuf, 2);}
 
 #include <string.h>
+#ifdef LINUX
+#include <stdlib.h>
+#endif
 
 int	opterr = 1;
 int	optind = 1;
