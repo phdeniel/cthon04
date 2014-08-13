@@ -51,9 +51,9 @@ sec=$5
 		fi
 	else
 		if [ -n "$sec" ] ; then
-			mntargs="-o $proto,nfsvers=$vers,sec=$sec"
+			mntargs="-o $proto,v$vers,sec=$sec"
 		else
-			mntargs="-o $proto,nfsvers=$vers"
+			mntargs="-o $proto,v$vers"
 		fi
 		if [ "$proto" = "rdma" ] ; then
 			mntargs="$mntargs,port=20049"
