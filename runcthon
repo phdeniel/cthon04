@@ -10,8 +10,6 @@ server=$2
 vers=$3
 proto=$4
 sec=$5
-#echo "proto=$proto"
-#echo "sec=$sec"
 
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
@@ -253,7 +251,6 @@ do
 done
 date
 seclist="krb5 krb5i krb5p"
-echo "serverdir=$serverdir"
 tests="b g s l"
 [ "$nolcks" -eq 1 ] && tests="b g s"
 for i in $tests
