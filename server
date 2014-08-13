@@ -129,7 +129,7 @@ HOSTNAME=`hostname`
 HOSTNAME=`expr $HOSTNAME : '\([^.]*\)'`
 NFSTESTDIR=$MNTPOINT/$HOSTNAME.test
 export NFSTESTDIR
-if test $ask2mnt = "yes" 
+if test "$ask2mnt" = "yes" 
 then
 	echo $DASHN "Start tests on path $NFSTESTDIR [y/n]?" "$BLC"
 	read ans
