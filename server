@@ -11,6 +11,7 @@
 #	-c		use cachefs; need to specify cachefs mount
 #			options with -o
 #	-N passes	repeat "passes" times
+#   -A    Ask before doing the mount [default: no]
 #	mnt_options	arg to -o mount options
 #	server_path	path to mount from server
 #	mntpoint	path to mount on locally
@@ -19,15 +20,16 @@
 Program=`basename $0`
 
 InitFile="./tests.init"
-USAGE="usage:  $Program [-a|-b|-g|-s|-l|-c] [-f|-t|-n|-h|-C] [-o mnt_options] [-p server_path] [-m mntpoint] [-N passes] server_name"
+USAGE="usage:  $Program [-a|-b|-B|-g|-s|-l|-c] [-f|-t|-n|-h|-C] [-o mnt_options] [-p server_path] [-m mntpoint] [-N passes] server_name"
 
 # defaults
 . $InitFile
 export PATH CFLAGS LIBS MOUNT UMOUNT MNTOPTIONS FSOPT
 
 passes="1"
+askt2mnt="no"
 
-set - `getopt abcCfF:glhm:N:no:p:st $*`
+set - `getopt aAbcCfF:glhm:N:no:p:st $*`
 
 if [ $? != 0 ]
 then
@@ -40,6 +42,7 @@ do
 		-a|-b|-g|-s|-l)	TEST=$c; shift	;;
 		-f|-n|-t)	TESTARG=$c; shift	;;
 		-c)		cachefs="yes"; shift	;;
+		-A)		ask2mnt="yes"; shift ;;
 		-C)		CIFS="yes"; export CIFS; shift ;;
 		-h)		HARDLINKS=n; export HARDLINKS; shift	;;
 		-m)		USRMNTPOINT=$2; shift; shift	;;
@@ -126,19 +129,20 @@ HOSTNAME=`hostname`
 HOSTNAME=`expr $HOSTNAME : '\([^.]*\)'`
 NFSTESTDIR=$MNTPOINT/$HOSTNAME.test
 export NFSTESTDIR
-#echo $DASHN "Start tests on path $NFSTESTDIR [y/n]?" "$BLC"
-#read ans
-ans="y"
-case $ans in
-    Y*|y*)
-	;;
-    *)
-	echo "Terminating ($MNTPOINT left mounted)."
-	exit 1
-	;;
-esac
-	
+if test $ask2mnt = "yes" 
+then
+	echo $DASHN "Start tests on path $NFSTESTDIR [y/n]?" "$BLC"
+	read ans
+	case $ans in
+    	Y*|y*)
+		;;
+    	*)
+		echo "Terminating ($MNTPOINT left mounted)."
+		exit 1
+		;;
+	esac
 echo ""
+fi
 
 if test $passes = "1"
 then
