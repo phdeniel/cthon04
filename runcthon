@@ -62,6 +62,7 @@ sec=$5
 	fi
 
 	if [ $privatemnts -eq 1 ]; then
+		[ ! -d /mnt/$server ] && mkdir /mnt/$server
 		mnt=/mnt/$server
 	else
 		mnt=/mnt
