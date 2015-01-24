@@ -10,7 +10,8 @@ server=$2
 vers=$3
 proto=$4
 sec=$5
-
+#echo "test=$test server=$server vers-$vers proto=$proto sec=$sec"
+#return
 	if [ $vers = "4" ]; then
 		if [ -n "$sec" ] ; then
 			if [ $minver -gt 0 ]; then  
@@ -256,7 +257,7 @@ tests="b g s l"
 [ "$nolcks" -eq 1 ] && tests="b g s"
 for i in $tests
 do
-	if [ "$onlykrb5" -eq 0 -a $dokrb5 -eq 0 ]; then  
+	if [ "$onlykrb5" -eq 0 -a $dokrb5 -eq 1 ]; then  
 		if [ "$noudp" -ne 1 -a "$onlyrdma" -eq 0 ]; then  
 			if [ "$onlyv4" -eq 0 ]; then
 				runtests -$i $SRV 3 udp ""
