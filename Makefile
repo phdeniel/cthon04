@@ -5,10 +5,13 @@
 # 'make clean'			cleans directories
 # 'make copy DESTDIR=path'	copies test programs to path
 # 'make dist DESTDIR=path'	copies sources to path
+# 'make tar DESTDIR=path'       runs make dist and then packs the directory 
+# 'make rpm DESTDIR=path'       runs make tar and runs rpmbuild -ta on it 
+	
 
 DESTDIR=/no/such/path
 COPYFILES=runtests tests.init server domount.c README READWIN.txt Testitems \
-	getopt.c tests.h unixdos.h
+	getopt.c tests.h unixdos.h cthon04.spec
 
 include tests.init
 
@@ -58,6 +61,14 @@ dist: mknewdirs
 	cd lock; $(MAKE) dist DESTDIR=$(DESTDIR)/lock
 	chmod u+w $(DESTDIR)/tests.init
 	chmod a+x $(DESTDIR)/server
+
+tar: dist
+	cd $(DESTDIR) && tar --transform 's,^,cthon04-1/,' -cv -f cthon04.tar * 
+	mv $(DESTDIR)/cthon04.tar .
+
+rpm: tar
+	rpmbuild -ta cthon04.tar
+
 
 mknewdirs:
 	-mkdir $(DESTDIR)/basic $(DESTDIR)/general $(DESTDIR)/special \

@@ -49,3 +49,4 @@ tools/udpd
 all
 */all
 cscope.*
+*.tar
